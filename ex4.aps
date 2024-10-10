@@ -1,0 +1,34 @@
+with "tiny";
+
+module EX4[T :: var TINY[]] extends T begin
+
+  attribute Wood.i1 : Integer;
+  attribute Wood.i2 : Integer;
+  attribute Wood.s1 : Integer;
+  attribute Wood.s2 : Integer;
+  
+  attribute Root.total : Integer;
+
+  pragma inherited(i1,i2);
+  pragma synthesized(s1,s2,total);
+
+  match ?r=root(?w) begin
+    r.total := w.s1 + w.s2;
+    w.i1 := 0;
+    w.i2 := 0;
+  end;
+  
+  match ?s=branch(?e1,?e2) begin
+    e1.i1 := s.i1;
+    e1.i2 := e2.s1;
+    e2.i1 := s.i2;
+    e2.i2 := e1.s1;
+    s.s1 := e2.s2;
+    s.s2 := e1.s2;
+  end;
+
+  match ?e=leaf(?i:Integer) begin
+    e.s1 := e.i1;
+    e.s2 := e.i2;
+  end;
+end;
